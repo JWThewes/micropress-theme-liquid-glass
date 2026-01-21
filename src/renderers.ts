@@ -18,26 +18,34 @@ export default defineTheme({
 
   renderers: {
     header: withAssets((data: HeaderDTO) => html`
-        <div class="ambient-orb-1"></div>
-        <div class="ambient-orb-2"></div>
-        <div class="ambient-orb-3"></div>
-        <header class="theme-header">
-          <a href="/" class="theme-header__brand">
-            ${data.logo
-              ? html`<img src="${data.logo.src}" alt="${data.logo.alt}" class="theme-header__logo" />`
-              : html`<span class="theme-header__title">${data.siteName}</span>`
-            }
-          </a>
-          ${when(data.showMenuToggle, html`
-            <button class="theme-header__toggle" aria-label="Toggle menu" aria-expanded="false">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            </button>
-          `)}
-        </header>
+        <div class="header-hero">
+          <div class="header-hero__bg">
+            <div class="header-hero__orb header-hero__orb--1"></div>
+            <div class="header-hero__orb header-hero__orb--2"></div>
+            <div class="header-hero__orb header-hero__orb--3"></div>
+            <div class="header-hero__mesh"></div>
+          </div>
+          <div class="ambient-orb-1"></div>
+          <div class="ambient-orb-2"></div>
+          <div class="ambient-orb-3"></div>
+          <header class="theme-header">
+            <a href="/" class="theme-header__brand">
+              ${data.logo
+                ? html`<img src="${data.logo.src}" alt="${data.logo.alt}" class="theme-header__logo" />`
+                : html`<span class="theme-header__title">${data.siteName}</span>`
+              }
+            </a>
+            ${when(data.showMenuToggle, html`
+              <button class="theme-header__toggle" aria-label="Toggle menu" aria-expanded="false">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+              </button>
+            `)}
+          </header>
+        </div>
       `.html, {
       scripts: `
         // Liquid Glass Interactive Mouse Tracking
