@@ -7,7 +7,8 @@
   "scripts": {
     "build": "micropress-theme build",
     "validate": "micropress-theme validate",
-    "package": "micropress-theme package"
+    "package": "micropress-theme package",
+    "version": "node -e \"const m=require('./manifest.json'); m.version=require('./package.json').version; require('fs').writeFileSync('manifest.json', JSON.stringify(m, null, 2)+'\\n')\" && git add manifest.json"
   },
   "devDependencies": {
     "@micropress/theme-sdk": "^0.1.1",

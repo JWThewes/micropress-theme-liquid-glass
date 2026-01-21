@@ -80,24 +80,67 @@ export default defineTheme({
       `,
     }),
 
-    navigation: {
-      render: (data: NavigationDTO) => html`
+    navigation: withAssets((data: NavigationDTO) => html`
         <nav class="theme-nav">
-          <ul class="theme-nav__list">
-            ${raw(data.items.map(item => html`
-              <li class="theme-nav__item">
-                <a
-                  href="${item.href}"
-                  class="theme-nav__link ${item.active ? 'is-active' : ''}"
-                >
-                  ${item.label}
-                </a>
-              </li>
-            `.html).join(''))}
-          </ul>
+          <div class="theme-nav__container">
+            <ul class="theme-nav__list">
+              ${raw(data.items.map(item => html`
+                <li class="theme-nav__item">
+                  <a
+                    href="${item.href}"
+                    class="theme-nav__link ${item.active ? 'is-active' : ''}"
+                  >
+                    <span class="theme-nav__link-text">${item.label}</span>
+                    <span class="theme-nav__link-glow"></span>
+                  </a>
+                </li>
+              `.html).join(''))}
+            </ul>
+          </div>
         </nav>
-      `.html,
-    },
+      `.html, {
+        styles: css`
+          .theme-nav__container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+          }
+
+          .theme-nav__link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .theme-nav__link-glow {
+            position: absolute;
+            inset: -4px;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.4) 0%, transparent 70%);
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            filter: blur(12px);
+            z-index: -1;
+          }
+
+          .theme-nav__link.is-active .theme-nav__link-glow,
+          .theme-nav__link:hover .theme-nav__link-glow {
+            opacity: 1;
+          }
+
+          .theme-nav__link-text {
+            position: relative;
+            z-index: 1;
+          }
+
+          @media (max-width: 768px) {
+            .theme-nav__container {
+              padding: 0 20px;
+            }
+          }
+        `,
+      }),
 
     footer: {
       render: (data: FooterDTO) => html`
@@ -155,34 +198,178 @@ export default defineTheme({
       `.html,
     },
 
-    newsCard: {
-      render: (data: any) => html`
-        <a href="${data.href}" class="news-card block-card" style="text-decoration: none; display: block;">
-          ${when(!!data.image, html`
-            <div class="news-card-image block-image" style="margin: -2rem -2rem 1.5rem;">
-              <img src="${data.image}" alt="${data.title}" />
+    newsCard: withAssets((data: any) => html`
+        <a href="${data.href}" class="news-card block-card">
+          <div class="news-card-inner">
+            ${when(!!data.image, html`
+              <div class="news-card-image-wrapper">
+                <div class="news-card-image block-image">
+                  <img src="${data.image}" alt="${data.title}" />
+                  <div class="news-card-overlay"></div>
+                </div>
+              </div>
+            `)}
+            <div class="news-card-content">
+              ${when(!!data.category, html`
+                <span class="news-card-category">${data.category}</span>
+              `)}
+              <h3 class="news-card-title">${data.title}</h3>
+              ${when(!!data.excerpt, html`
+                <p class="news-card-excerpt">${data.excerpt}</p>
+              `)}
+              <div class="news-card-footer">
+                <span class="news-card-date">${data.date || ''}</span>
+                <span class="news-card-arrow">→</span>
+              </div>
             </div>
-          `)}
-          <h3 class="news-card-title" style="margin-bottom: 0.5rem;">${data.title}</h3>
-          ${when(!!data.excerpt, html`
-            <p class="news-card-excerpt" style="color: var(--text-secondary); margin-bottom: 1rem;">
-              ${data.excerpt}
-            </p>
-          `)}
-          <div class="news-card-meta" style="color: var(--text-tertiary); font-size: 0.875rem;">
-            ${data.date || ''}
           </div>
         </a>
-      `.html,
-    },
+      `.html, {
+        styles: css`
+          .news-card {
+            text-decoration: none;
+            display: block;
+            height: 100%;
+            overflow: hidden;
+          }
 
-    newsList: {
-      render: (data: any, ctx: any) => html`
-        <div class="news-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;">
-          ${raw(ctx.renderAll(data.items || []))}
+          .news-card-inner {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+          }
+
+          .news-card-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: calc(var(--radius) - 4px);
+            margin-bottom: 1.5rem;
+          }
+
+          .news-card-image {
+            margin: 0;
+            aspect-ratio: 16 / 10;
+            position: relative;
+          }
+
+          .news-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--spring-smooth);
+          }
+
+          .news-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+          }
+
+          .news-card:hover .news-card-image img {
+            transform: scale(1.08);
+          }
+
+          .news-card:hover .news-card-overlay {
+            opacity: 1;
+          }
+
+          .news-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+          }
+
+          .news-card-category {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            width: fit-content;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+          }
+
+          .news-card-title {
+            margin: 0 0 1rem;
+            font-size: 1.5rem;
+            line-height: 1.3;
+          }
+
+          .news-card-excerpt {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            flex: 1;
+            line-height: 1.6;
+          }
+
+          .news-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+          }
+
+          .news-card-date {
+            color: var(--text-tertiary);
+            font-size: 0.875rem;
+          }
+
+          .news-card-arrow {
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: transform 0.3s var(--spring-smooth);
+          }
+
+          .news-card:hover .news-card-arrow {
+            transform: translateX(4px);
+          }
+        `,
+      }),
+
+    newsList: withAssets((data: any, ctx: any) => html`
+        <div class="news-list-wrapper">
+          <div class="news-list">
+            ${raw(ctx.renderAll(data.items || []))}
+          </div>
         </div>
-      `.html,
-    },
+      `.html, {
+        styles: css`
+          .news-list-wrapper {
+            width: 100%;
+            margin: 0 auto;
+          }
+
+          .news-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+          }
+
+          @media (max-width: 1200px) {
+            .news-list {
+              grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+              gap: 2rem;
+            }
+          }
+
+          @media (max-width: 768px) {
+            .news-list {
+              grid-template-columns: 1fr;
+              gap: 1.5rem;
+            }
+          }
+        `,
+      }),
 
     // Block renderers
     blocks: {
@@ -270,6 +457,12 @@ export default defineTheme({
       listItem: {
         render: (block: any, ctx: any) => html`
           <li>${raw(ctx.renderAll(block.children || []))}</li>
+        `.html,
+      },
+
+      horizontalRule: {
+        render: () => html`
+          <div class="section-divider"></div>
         `.html,
       },
 
