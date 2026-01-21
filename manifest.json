@@ -2,9 +2,11 @@
   "id": "micropress-theme-liquid-glass",
   "name": "Liquid Glass",
   "version": "1.0.0",
-  "description": "A stunning liquid glass theme inspired by Apple iOS 26. Features glass morphism effects, animated gradients, and fluid transitions.",
+  "description": "Inspired by Apple's iOS 26 Liquid Glass design language, this theme transforms your site with translucent glass panels, dynamic backdrop blur effects, and ambient floating light orbs. Features include smooth cubic-bezier animations, specular highlight borders that simulate light refraction, hover-responsive glass cards that lift and glow, and a continuously shifting gradient background. Perfect for modern portfolios, creative agencies, and tech-forward brands seeking a premium, futuristic aesthetic.",
   "author": "MicroPress",
   "homepage": "",
+  "keywords": ["glass", "glassmorphism", "liquid", "apple", "ios26", "modern", "animated", "blur", "translucent"],
+  "license": "MIT",
   "breakpoints": {
     "sm": "640px",
     "md": "768px",
