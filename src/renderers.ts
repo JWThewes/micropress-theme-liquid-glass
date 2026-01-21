@@ -231,6 +231,12 @@ export default defineTheme({
             display: block;
             height: 100%;
             overflow: hidden;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+          }
+
+          .news-card:hover {
+            background: rgba(255, 255, 255, 1);
           }
 
           .news-card-inner {
@@ -243,12 +249,12 @@ export default defineTheme({
             position: relative;
             overflow: hidden;
             border-radius: calc(var(--radius) - 4px);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
           }
 
           .news-card-image {
             margin: 0;
-            aspect-ratio: 16 / 10;
+            aspect-ratio: 16 / 9;
             position: relative;
           }
 
@@ -291,22 +297,29 @@ export default defineTheme({
             text-transform: uppercase;
             letter-spacing: 0.05em;
             border-radius: 8px;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             width: fit-content;
             box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
           }
 
           .news-card-title {
-            margin: 0 0 1rem;
-            font-size: 1.5rem;
+            margin: 0 0 0.75rem;
+            font-size: 1.25rem;
             line-height: 1.3;
+            color: #1a1a2e;
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: #1a1a2e;
+            background-clip: unset;
+            text-shadow: none;
           }
 
           .news-card-excerpt {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
+            color: #4a5568;
+            margin-bottom: 1rem;
             flex: 1;
             line-height: 1.6;
+            font-size: 0.95rem;
           }
 
           .news-card-footer {
@@ -314,23 +327,28 @@ export default defineTheme({
             justify-content: space-between;
             align-items: center;
             margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
           }
 
           .news-card-date {
-            color: var(--text-tertiary);
+            color: #718096;
             font-size: 0.875rem;
           }
 
           .news-card-arrow {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             color: var(--primary);
             transition: transform 0.3s var(--spring-smooth);
           }
 
           .news-card:hover .news-card-arrow {
             transform: translateX(4px);
+          }
+
+          /* Override block-card padding for news cards */
+          .news-card.block-card {
+            padding: 1.25rem;
           }
         `,
       }),
@@ -350,22 +368,15 @@ export default defineTheme({
 
           .news-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
             width: 100%;
           }
 
-          @media (max-width: 1200px) {
-            .news-list {
-              grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-              gap: 2rem;
-            }
-          }
-
-          @media (max-width: 768px) {
+          @media (max-width: 900px) {
             .news-list {
               grid-template-columns: 1fr;
-              gap: 1.5rem;
+              gap: 1.25rem;
             }
           }
         `,
