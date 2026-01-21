@@ -18,6 +18,9 @@ export default defineTheme({
 
   renderers: {
     header: withAssets((data: HeaderDTO) => html`
+        <div class="ambient-orb-1"></div>
+        <div class="ambient-orb-2"></div>
+        <div class="ambient-orb-3"></div>
         <header class="theme-header">
           <a href="/" class="theme-header__brand">
             ${data.logo
