@@ -17,8 +17,7 @@ export default defineTheme({
   },
 
   renderers: {
-    header: {
-      render: (data: HeaderDTO) => html`
+    header: withAssets((data: HeaderDTO) => html`
         <header class="theme-header">
           <a href="/" class="theme-header__brand">
             ${data.logo
@@ -36,8 +35,47 @@ export default defineTheme({
             </button>
           `)}
         </header>
-      `.html,
-    },
+      `.html, {
+      scripts: `
+        // Liquid Glass Interactive Mouse Tracking
+        (function() {
+          const cards = document.querySelectorAll('article, .content-card, .block-card');
+
+          cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+              const rect = card.getBoundingClientRect();
+              const x = ((e.clientX - rect.left) / rect.width) * 100;
+              const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+              card.style.setProperty('--mouse-x', x + '%');
+              card.style.setProperty('--mouse-y', y + '%');
+            });
+
+            card.addEventListener('mouseleave', () => {
+              card.style.setProperty('--mouse-x', '50%');
+              card.style.setProperty('--mouse-y', '50%');
+            });
+          });
+
+          // Add subtle parallax to floating orbs based on mouse position
+          let mouseX = 0;
+          let mouseY = 0;
+
+          document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+          });
+
+          function animateOrbs() {
+            document.documentElement.style.setProperty('--mouse-x', (50 + mouseX * 5) + '%');
+            document.documentElement.style.setProperty('--mouse-y', (50 + mouseY * 5) + '%');
+            requestAnimationFrame(animateOrbs);
+          }
+
+          animateOrbs();
+        })();
+      `,
+    }),
 
     navigation: {
       render: (data: NavigationDTO) => html`
