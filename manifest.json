@@ -1,11 +1,21 @@
 {
   "id": "micropress-theme-liquid-glass",
   "name": "Liquid Glass",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Inspired by Apple's iOS 26 Liquid Glass design language, this theme transforms your site with translucent glass panels, dynamic backdrop blur effects, and ambient floating light orbs. Features include smooth cubic-bezier animations, specular highlight borders that simulate light refraction, hover-responsive glass cards that lift and glow, and a continuously shifting gradient background. Perfect for modern portfolios, creative agencies, and tech-forward brands seeking a premium, futuristic aesthetic.",
   "author": "MicroPress",
   "homepage": "",
-  "keywords": ["glass", "glassmorphism", "liquid", "apple", "ios26", "modern", "animated", "blur", "translucent"],
+  "keywords": [
+    "glass",
+    "glassmorphism",
+    "liquid",
+    "apple",
+    "ios26",
+    "modern",
+    "animated",
+    "blur",
+    "translucent"
+  ],
   "license": "MIT",
   "breakpoints": {
     "sm": "640px",
@@ -33,25 +43,47 @@
       "type": "select",
       "label": "Glass Opacity",
       "default": "0.12",
-      "options": ["0.08", "0.12", "0.16", "0.20"]
+      "options": [
+        "0.08",
+        "0.12",
+        "0.16",
+        "0.20"
+      ]
     },
     "blurStrength": {
       "type": "select",
       "label": "Blur Strength",
       "default": "24px",
-      "options": ["16px", "24px", "32px", "40px"]
+      "options": [
+        "16px",
+        "24px",
+        "32px",
+        "40px"
+      ]
     },
     "borderRadius": {
       "type": "select",
       "label": "Border Radius",
       "default": "24px",
-      "options": ["12px", "16px", "20px", "24px", "32px"]
+      "options": [
+        "12px",
+        "16px",
+        "20px",
+        "24px",
+        "32px"
+      ]
     },
     "fontFamily": {
       "type": "select",
       "label": "Font Family",
       "default": "system-ui",
-      "options": ["system-ui", "Inter", "SF Pro Display", "Georgia", "Roboto"]
+      "options": [
+        "system-ui",
+        "Inter",
+        "SF Pro Display",
+        "Georgia",
+        "Roboto"
+      ]
     },
     "contentWidth": {
       "type": "size",
@@ -62,7 +94,11 @@
       "type": "select",
       "label": "Animation Speed",
       "default": "normal",
-      "options": ["slow", "normal", "fast"]
+      "options": [
+        "slow",
+        "normal",
+        "fast"
+      ]
     }
   }
 }

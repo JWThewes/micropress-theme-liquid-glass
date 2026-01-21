@@ -1,6 +1,6 @@
 {
   "name": "micropress-theme-liquid-glass",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A custom MicroPress theme",
   "main": "dist/renderers.js",
   "types": "dist/renderers.d.ts",
@@ -14,6 +14,9 @@
     "@micropress/theme-sdk": "^0.1.1",
     "typescript": "^5.0.0"
   },
-  "keywords": ["micropress", "theme"],
+  "keywords": [
+    "micropress",
+    "theme"
+  ],
   "license": "MIT"
 }
