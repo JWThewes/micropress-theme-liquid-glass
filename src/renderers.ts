@@ -188,7 +188,7 @@ export default defineTheme({
             </div>
           `)}
           <div class="article-content">
-            ${raw(ctx.renderAll(data.children || []))}
+            ${raw(ctx.renderAll(data.blocks || []))}
           </div>
         </article>
       `.html,
@@ -209,7 +209,7 @@ export default defineTheme({
             ${data.category ? ` · ${data.category}` : ''}
           </div>
           <div class="news-content">
-            ${raw(ctx.renderAll(data.children || []))}
+            ${raw(ctx.renderAll(data.blocks || []))}
           </div>
         </article>
       `.html,
