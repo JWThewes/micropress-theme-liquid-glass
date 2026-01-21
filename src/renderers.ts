@@ -152,18 +152,27 @@ export default defineTheme({
 
     footer: {
       render: (data: FooterDTO) => html`
-        <footer class="theme-footer">
-          <div class="theme-footer__content">
-            <p class="theme-footer__copyright">&copy; ${data.year} ${data.copyright}</p>
-            ${when(data.links.length > 0, html`
-              <nav class="theme-footer__nav">
-                ${raw(data.links.map(link => html`
-                  <a href="${link.href}" class="theme-footer__link">${link.label}</a>
-                `.html).join(''))}
-              </nav>
-            `)}
+        <div class="footer-hero">
+          <div class="footer-hero__bg">
+            <div class="footer-hero__orb footer-hero__orb--1"></div>
+            <div class="footer-hero__orb footer-hero__orb--2"></div>
+            <div class="footer-hero__glow"></div>
           </div>
-        </footer>
+          <footer class="theme-footer">
+            <div class="theme-footer__inner">
+              <div class="theme-footer__content">
+                <p class="theme-footer__copyright">&copy; ${data.year} ${data.copyright}</p>
+                ${when(data.links.length > 0, html`
+                  <nav class="theme-footer__nav">
+                    ${raw(data.links.map(link => html`
+                      <a href="${link.href}" class="theme-footer__link">${link.label}</a>
+                    `.html).join(''))}
+                  </nav>
+                `)}
+              </div>
+            </div>
+          </footer>
+        </div>
       `.html,
     },
 
