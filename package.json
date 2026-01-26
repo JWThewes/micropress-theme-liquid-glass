@@ -1,6 +1,6 @@
 {
   "name": "micropress-theme-liquid-glass",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A custom MicroPress theme",
   "main": "dist/renderers.js",
   "types": "dist/renderers.d.ts",
