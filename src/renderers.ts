@@ -20,6 +20,7 @@ export default defineTheme({
     header: withAssets((data: HeaderDTO) => html`
         <div class="header-hero">
           <div class="header-hero__bg">
+            <div class="header-hero__sheen"></div>
             <div class="header-hero__orb header-hero__orb--1"></div>
             <div class="header-hero__orb header-hero__orb--2"></div>
             <div class="header-hero__orb header-hero__orb--3"></div>
@@ -29,28 +30,30 @@ export default defineTheme({
           <div class="ambient-orb-2"></div>
           <div class="ambient-orb-3"></div>
           <header class="theme-header">
-            <a href="/" class="theme-header__brand">
-              ${data.logo
-                ? html`<img src="${data.logo.src}" alt="${data.logo.alt}" class="theme-header__logo" />`
-                : html`<span class="theme-header__title">${data.siteName}</span>`
-              }
-            </a>
-            ${when(data.showMenuToggle, html`
-              <button class="theme-header__toggle" aria-label="Toggle menu" aria-expanded="false">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="3" y1="6" x2="21" y2="6"></line>
-                  <line x1="3" y1="12" x2="21" y2="12"></line>
-                  <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-              </button>
-            `)}
+            <div class="theme-header__inner page-width">
+              <a href="/" class="theme-header__brand">
+                ${data.logo
+                  ? html`<img src="${data.logo.src}" alt="${data.logo.alt}" class="theme-header__logo" />`
+                  : html`<span class="theme-header__title">${data.siteName}</span>`
+                }
+              </a>
+              ${when(data.showMenuToggle, html`
+                <button class="theme-header__toggle" aria-label="Toggle menu" aria-expanded="false">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                  </svg>
+                </button>
+              `)}
+            </div>
           </header>
         </div>
       `.html, {
       scripts: `
         // Liquid Glass Interactive Mouse Tracking
         (function() {
-          const cards = document.querySelectorAll('article, .content-card, .block-card');
+          const cards = document.querySelectorAll('article, .content-card, .block-card, .news-card');
 
           cards.forEach(card => {
             card.addEventListener('mousemove', (e) => {
@@ -84,13 +87,40 @@ export default defineTheme({
           }
 
           animateOrbs();
+          
+          // Navigation toggle for compact viewports
+          const toggle = document.querySelector('.theme-header__toggle');
+          const nav = document.querySelector('.theme-nav');
+
+          if (toggle && nav) {
+            const closeNav = () => {
+              nav.classList.remove('is-open');
+              toggle.setAttribute('aria-expanded', 'false');
+            };
+
+            toggle.addEventListener('click', () => {
+              const willOpen = !nav.classList.contains('is-open');
+              nav.classList.toggle('is-open', willOpen);
+              toggle.setAttribute('aria-expanded', String(willOpen));
+            });
+
+            window.addEventListener('resize', () => {
+              if (window.innerWidth > 900) {
+                closeNav();
+              }
+            });
+
+            document.addEventListener('keydown', (event) => {
+              if (event.key === 'Escape') closeNav();
+            });
+          }
         })();
       `,
     }),
 
     navigation: withAssets((data: NavigationDTO) => html`
         <nav class="theme-nav">
-          <div class="theme-nav__container">
+          <div class="theme-nav__container page-width">
             <ul class="theme-nav__list">
               ${raw(data.items.map(item => html`
                 <li class="theme-nav__item">
@@ -108,45 +138,9 @@ export default defineTheme({
         </nav>
       `.html, {
         styles: css`
-          .theme-nav__container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 40px;
-          }
-
-          .theme-nav__link {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-
-          .theme-nav__link-glow {
-            position: absolute;
-            inset: -4px;
-            background: radial-gradient(circle, rgba(0, 122, 255, 0.4) 0%, transparent 70%);
-            border-radius: 16px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            filter: blur(12px);
-            z-index: -1;
-          }
-
-          .theme-nav__link.is-active .theme-nav__link-glow,
-          .theme-nav__link:hover .theme-nav__link-glow {
-            opacity: 1;
-          }
-
-          .theme-nav__link-text {
-            position: relative;
-            z-index: 1;
-          }
-
-          @media (max-width: 768px) {
-            .theme-nav__container {
-              padding: 0 20px;
-            }
-          }
+          .theme-nav__container { width: 100%; }
+          .theme-nav__list { list-style: none; margin: 0; padding: 0; }
+          .theme-nav__link-glow { display: none; }
         `,
       }),
 
@@ -159,7 +153,7 @@ export default defineTheme({
             <div class="footer-hero__glow"></div>
           </div>
           <footer class="theme-footer">
-            <div class="theme-footer__inner">
+            <div class="theme-footer__inner page-width">
               <div class="theme-footer__content">
                 <p class="theme-footer__copyright">&copy; ${data.year} ${data.copyright}</p>
                 ${when(data.links.length > 0, html`
@@ -179,7 +173,7 @@ export default defineTheme({
     // Content renderers
     article: {
       render: (data: any, ctx: any) => html`
-        <article class="page-article">
+        <article class="page-article page-width">
           ${when(!!data.title, html`<h1 class="article-title">${data.title}</h1>`)}
           ${when(!!data.meta, html`
             <div class="article-meta" style="color: var(--text-tertiary); margin-bottom: 2rem; font-size: 0.875rem;">
@@ -196,7 +190,7 @@ export default defineTheme({
 
     newsArticle: {
       render: (data: any, ctx: any) => html`
-        <article class="news-article content-card">
+        <article class="news-article content-card page-width">
           ${when(!!data.featuredImage, html`
             <div class="news-featured-image block-image" style="margin-bottom: 2rem;">
               <img src="${data.featuredImage?.src}" alt="${data.featuredImage?.alt || ''}" />
@@ -241,170 +235,15 @@ export default defineTheme({
             </div>
           </div>
         </a>
-      `.html, {
-        styles: css`
-          .news-card {
-            text-decoration: none;
-            display: block;
-            height: 100%;
-            overflow: hidden;
-          }
-
-          .news-card-inner {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-          }
-
-          .news-card-image-wrapper {
-            position: relative;
-            overflow: hidden;
-            border-radius: calc(var(--radius) - 4px);
-            margin-bottom: 1.25rem;
-          }
-
-          .news-card-image {
-            margin: 0;
-            aspect-ratio: 16 / 9;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: calc(var(--radius) - 4px);
-            overflow: hidden;
-          }
-
-          .news-card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s var(--ease-out-expo);
-          }
-
-          .news-card-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-          }
-
-          .news-card:hover .news-card-image img {
-            transform: scale(1.06);
-          }
-
-          .news-card:hover .news-card-overlay {
-            opacity: 1;
-          }
-
-          .news-card-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-          }
-
-          .news-card-category {
-            display: inline-block;
-            padding: 6px 14px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            width: fit-content;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
-          }
-
-          .news-card-title {
-            margin: 0 0 1rem;
-            font-size: 1.375rem;
-            line-height: 1.3;
-            font-weight: 700;
-            color: var(--text-primary);
-            background: none;
-            -webkit-background-clip: unset;
-            -webkit-text-fill-color: var(--text-primary);
-            background-clip: unset;
-            text-shadow: none;
-            filter: none;
-            letter-spacing: -0.02em;
-          }
-
-          .news-card-excerpt {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            flex: 1;
-            line-height: 1.7;
-            font-size: 0.9375rem;
-          }
-
-          .news-card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-          }
-
-          .news-card-date {
-            color: var(--text-tertiary);
-            font-size: 0.875rem;
-          }
-
-          .news-card-arrow {
-            font-size: 1.25rem;
-            color: var(--primary);
-            transition: transform 0.3s var(--ease-out-expo);
-          }
-
-          .news-card:hover .news-card-arrow {
-            transform: translateX(6px);
-          }
-
-          /* Override block-card padding for news cards */
-          .news-card.block-card {
-            padding: 1.5rem;
-          }
-        `,
-      }),
+      `.html, {}),
 
     newsList: withAssets((data: any, ctx: any) => html`
-        <div class="news-list-wrapper">
+        <div class="news-list-wrapper page-width">
           <div class="news-list">
             ${raw(ctx.renderAll(data.items || []))}
           </div>
         </div>
-      `.html, {
-        styles: css`
-          .news-list-wrapper {
-            width: 100%;
-            margin: 0 auto;
-            max-width: 1400px;
-          }
-
-          .news-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 2rem;
-            width: 100%;
-          }
-
-          @media (max-width: 900px) {
-            .news-list {
-              grid-template-columns: 1fr;
-              gap: 1.5rem;
-            }
-          }
-
-          @media (max-width: 500px) {
-            .news-list {
-              gap: 1.25rem;
-            }
-          }
-        `,
-      }),
+      `.html, {}),
 
     // Block renderers
     blocks: {
@@ -525,10 +364,10 @@ export default defineTheme({
           styles: css`
             .block-accordion { margin: 2rem 0; }
             .accordion-item {
-              background: var(--glass-bg);
+              background: rgba(255, 255, 255, 0.05);
               backdrop-filter: blur(var(--glass-blur));
               -webkit-backdrop-filter: blur(var(--glass-blur));
-              border: 1px solid var(--glass-border);
+              border: 1px solid var(--outline);
               border-radius: 16px;
               margin-bottom: 12px;
               overflow: hidden;
@@ -538,20 +377,20 @@ export default defineTheme({
               display: flex;
               justify-content: space-between;
               align-items: center;
-              padding: 1.25rem 1.5rem;
+              padding: 1.1rem 1.25rem;
               background: none;
               border: none;
               color: var(--text-primary);
               font-size: 1rem;
-              font-weight: 600;
+              font-weight: 700;
               cursor: pointer;
-              transition: all 0.3s ease;
+              transition: background var(--anim-fast);
             }
             .accordion-header:hover {
-              background: rgba(255, 255, 255, 0.05);
+              background: rgba(255, 255, 255, 0.06);
             }
             .accordion-header svg {
-              transition: transform 0.3s ease;
+              transition: transform var(--anim-fast);
             }
             .accordion-item.is-open .accordion-header svg {
               transform: rotate(180deg);
@@ -559,13 +398,13 @@ export default defineTheme({
             .accordion-content {
               max-height: 0;
               overflow: hidden;
-              transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+              transition: max-height var(--anim-slow);
             }
             .accordion-item.is-open .accordion-content {
               max-height: 1000px;
             }
             .accordion-body {
-              padding: 0 1.5rem 1.5rem;
+              padding: 0 1.25rem 1.25rem;
               color: var(--text-secondary);
             }
           `,
@@ -614,29 +453,29 @@ export default defineTheme({
             .block-tabs { margin: 2rem 0; }
             .tabs-header {
               display: flex;
-              gap: 8px;
-              margin-bottom: 1.5rem;
-              background: var(--glass-bg);
-              backdrop-filter: blur(var(--glass-blur));
-              -webkit-backdrop-filter: blur(var(--glass-blur));
-              border: 1px solid var(--glass-border);
+              gap: 10px;
+              margin-bottom: 1.25rem;
+              background: rgba(255, 255, 255, 0.05);
+              border: 1px solid var(--outline);
               border-radius: 16px;
               padding: 8px;
+              backdrop-filter: blur(var(--glass-blur));
+              -webkit-backdrop-filter: blur(var(--glass-blur));
             }
             .tab-button {
               flex: 1;
-              padding: 12px 20px;
+              padding: 12px 16px;
               background: none;
               border: none;
               border-radius: 12px;
               color: var(--text-secondary);
-              font-weight: 600;
+              font-weight: 700;
               cursor: pointer;
-              transition: all 0.3s ease;
+              transition: background var(--anim-fast), color var(--anim-fast), transform var(--anim-fast);
             }
             .tab-button:hover {
               color: var(--text-primary);
-              background: rgba(255, 255, 255, 0.1);
+              transform: translateY(-2px);
             }
             .tab-button.is-active {
               color: white;
@@ -645,19 +484,19 @@ export default defineTheme({
             }
             .tab-panel {
               display: none;
-              background: var(--glass-bg);
+              background: rgba(255, 255, 255, 0.04);
               backdrop-filter: blur(var(--glass-blur));
               -webkit-backdrop-filter: blur(var(--glass-blur));
-              border: 1px solid var(--glass-border);
+              border: 1px solid var(--outline);
               border-radius: 20px;
-              padding: 2rem;
+              padding: 1.5rem;
             }
             .tab-panel.is-active {
               display: block;
-              animation: fadeIn 0.3s ease;
+              animation: fadeIn 0.2s ease-out;
             }
             @keyframes fadeIn {
-              from { opacity: 0; transform: translateY(8px); }
+              from { opacity: 0; transform: translateY(6px); }
               to { opacity: 1; transform: translateY(0); }
             }
           `,
